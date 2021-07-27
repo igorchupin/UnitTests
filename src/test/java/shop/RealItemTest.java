@@ -5,28 +5,32 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RealItemTest {
+
     RealItem testRealItem;
     private static final double WEIGTH = 100;
+    private static final double PRICE = 10;
 
     @BeforeEach
     void setUp() {
         testRealItem = new RealItem();
+        testRealItem.setName("TestRealItem");
+        testRealItem.setPrice(PRICE);
+        testRealItem.setWeight(WEIGTH);
     }
+
 
     @Test
-    @Tag("Real_item_set_and_get_weigth")
+    @Tag("Virtual_item_to_String")
     @Tag ("Smoke")
-    @DisplayName("Set weigth and get weigth")
-    void setWeightAndGetWeigth() {
+    @DisplayName("Virtual item to String")
+    void testToString() {
 
-        double weigthBefore = testRealItem.getWeight();
-        testRealItem.setWeight(WEIGTH);
-        double weigthAfter = testRealItem.getWeight();
+        String expectedResult = String.format ("Class: %s; Name: %s; Price: %s; Weight: %s",
+                testRealItem.getClass(), testRealItem.getName(), testRealItem.getPrice(),
+                testRealItem.getWeight());
 
-        assertAll("Weigth",
-                () -> assertEquals(0.0, weigthBefore, "incorrect default value"),
-                () -> assertEquals(100, weigthAfter, "Incorrect weigth was set" )
-        );
+        assertEquals(expectedResult, testRealItem.toString(), "Something went wrong with To_string");
     }
+
 
 }
