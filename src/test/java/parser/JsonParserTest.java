@@ -160,7 +160,11 @@ class JsonParserTest {
         Exception exception = assertThrows(NoSuchFileException.class, () ->
                 testParser.readFromFile(newFile));
 
-        assertTrue(exception.getMessage().contains("not found!"));
+        assertTrue(exception.getMessage().contains("not found!"), "the NoSuchFileException was expected " +
+                "but: \n" +
+                "1. It was NOT thrown OR \n" +
+                "2. Another exception was thrown OR \n" +
+                "3.Exception contains incorrect message\n");
     }
 
 
