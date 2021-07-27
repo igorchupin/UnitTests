@@ -20,9 +20,9 @@ class RealItemTest {
 
 
     @Test
-    @Tag("Virtual_item_to_String")
+    @Tag("Real_item_to_String")
     @Tag ("Smoke")
-    @DisplayName("Virtual item to String")
+    @DisplayName("Real item to String")
     void testToString() {
 
         String expectedResult = String.format ("Class: %s; Name: %s; Price: %s; Weight: %s",
