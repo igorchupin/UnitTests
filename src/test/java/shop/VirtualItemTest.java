@@ -15,21 +15,20 @@ class VirtualItemTest {
     @BeforeEach
     void setUp() {
         testVirtualItem = new VirtualItem();
+        testVirtualItem.setSizeOnDisk(SIZE);
     }
+
 
     @Test
-    @Tag("Virtual_item_set_and_get_size")
+    @Tag("Virtual_item_to_String")
     @Tag ("Smoke")
-    @DisplayName("Set size and get size")
-    void setSizeOnDisk() {
-        double sizeBefore = testVirtualItem.getSizeOnDisk();
-        testVirtualItem.setSizeOnDisk(SIZE);
-        double sizeAfter = testVirtualItem.getSizeOnDisk();
+    @DisplayName("Virtual item to String")
+    void testToString() {
 
-        assertAll("Weigth",
-                () -> assertEquals(0.0, sizeBefore, "incorrect default size"),
-                () -> assertEquals(999, sizeAfter, "Incorrect size was set" )
-        );
+        String expectedResult = String.format ("Class: %s; Name: %s; Price: %s; Size on disk: %s",
+                testVirtualItem.getClass(), testVirtualItem.getName(), testVirtualItem.getPrice(),
+                testVirtualItem.getSizeOnDisk());
+
+        assertEquals(expectedResult, testVirtualItem.toString(), "Something went wrong with To_string");
     }
-
 }
