@@ -40,11 +40,23 @@ class JsonParserTest {
     }
 
 
-       /* public Cart createFullFilledCart (Cart cart) {
+       public Cart addingItemsToCart (Cart cart) {
+
+            RealItem testRealItem = new RealItem();
+            testRealItem.setName("Test Real Item Name");
+            testRealItem.setWeight(100);
+            testRealItem.setPrice(10);
+
+            VirtualItem testVirtualItem = new VirtualItem();
+            testRealItem.setName("Test Virtual Item");
+            testVirtualItem.setSizeOnDisk(200);
+            testRealItem.setPrice(20);
+
+            testCart.addRealItem(testRealItem);
+            testCart.addVirtualItem(testVirtualItem);
+
           return cart;
-         } */
-
-
+         }
 
 
     @BeforeEach
@@ -59,7 +71,7 @@ class JsonParserTest {
 
     @AfterEach
     void tearDown() throws IOException {
-        Path fileToDeletePath = Paths.get(pathToFile);
+        Path fileToDeletePath = Paths.get(pathToFile );
         Files.deleteIfExists(fileToDeletePath);
     }
 
@@ -148,12 +160,19 @@ class JsonParserTest {
     @Tag ("Smoke")
     @DisplayName("Positive test, reading data from file")
     public void readFromFileSmoke() throws IOException {
-        File eugenCart = new File("src/main/resources/eugen-cart.json");
 
-        Reader reader = new FileReader("src/main/resources/eugen-cart.json");
+        addingItemsToCart(testCart);
+        File testCartFile = new File(pathToFile);
+
+        FileWriter writer = new FileWriter(testCartFile);
+        writer.write(gson.toJson(testCart));
+        writer.close();
+
+        Reader reader = new FileReader(pathToFile);
         Cart expectedCart = gson.fromJson(reader, Cart.class);
         reader.close();
-        Cart actualCart = testParser.readFromFile(eugenCart);
+
+        Cart actualCart = testParser.readFromFile(testCartFile);
 
         assertAll("Values",
                 () -> assertEquals(expectedCart.getCartName(), actualCart.getCartName(), "incorrect cart " +
