@@ -71,7 +71,7 @@ class JsonParserTest {
 
     @AfterEach
     void tearDown() throws IOException {
-        Path fileToDeletePath = Paths.get(pathToFile );
+        Path fileToDeletePath = Paths.get(pathToFile);
         Files.deleteIfExists(fileToDeletePath);
     }
 
@@ -127,15 +127,17 @@ class JsonParserTest {
     @Tag ("Smoke")
     @DisplayName("File contains correct data from Object")
     public void writeToFileContainsCorrectData() throws IOException {
+        addingItemsToCart(testCart);
         testParser.writeToFile(testCart);
         Reader reader = new FileReader(pathToFile);
         Cart createdCart = gson.fromJson(reader, Cart.class);
         reader.close();
 
-        assertEquals(testCart.getCartName(), createdCart.getCartName(), "Wrong information was " +
-                "written in the file");
+        assertAll("values",
+                () -> assertEquals(testCart.getCartName(), createdCart.getCartName(), "Incorrect Cart Name"),
+                () -> assertEquals(testCart.getTotalPrice(), createdCart.getTotalPrice(), "Incorrect total price")
+        );
     }
-
 
 
     //Disabled case!!
