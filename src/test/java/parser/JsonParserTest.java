@@ -13,26 +13,53 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.Random;
 
 
 class JsonParserTest {
 
     Cart testCart;
     JsonParser testParser;
-    File newFile ;
+    File newFile;
     Gson gson;
+    int cartNameLength = 10; //Set the Cart name length
+    String cartName;
+    String pathToFolder = "src/main/resources/";
+    String pathToFile;
+
+
+
+    public String generateCardName () {
+        String cartName = "";
+        for (int i = 0; i <= cartNameLength  ; i++) {
+            int rndChar = 97 + (new Random().nextInt(122 - 97));
+            Character tempChar = (char) rndChar;
+            cartName = cartName + tempChar;
+        }
+        return cartName;
+    }
+
+
+       /* public Cart createFullFilledCart (Cart cart) {
+          return cart;
+         } */
+
+
+
 
     @BeforeEach
     void setUp() {
-        testCart = new Cart("CartName");
+        cartName = new String(generateCardName());
+        testCart = new Cart(cartName);
         testParser = new JsonParser();
-        newFile = new File("src/main/resources/CartName.json");
+        pathToFile = pathToFolder + cartName + ".json";
+        newFile = new File(pathToFile);
         gson = new Gson();
     }
 
     @AfterEach
     void tearDown() throws IOException {
-        Path fileToDeletePath = Paths.get("src/main/resources/CartName.json");
+        Path fileToDeletePath = Paths.get(pathToFile);
         Files.deleteIfExists(fileToDeletePath);
     }
 
@@ -73,7 +100,7 @@ class JsonParserTest {
     @Tag ("Extended")
     @DisplayName("Creating file with null in the name")
     public void writeToFileNullName() throws IOException {
-        Path fileToDeletePath = Paths.get("src/main/resources/null.json");
+        Path fileToDeletePath = Paths.get(pathToFolder + "null.json");
         Cart cartNull = new Cart(null);
         testParser.writeToFile(cartNull);
 
@@ -89,8 +116,7 @@ class JsonParserTest {
     @DisplayName("File contains correct data from Object")
     public void writeToFileContainsCorrectData() throws IOException {
         testParser.writeToFile(testCart);
-
-        Reader reader = new FileReader("src/main/resources/CartName.json");
+        Reader reader = new FileReader(pathToFile);
         Cart createdCart = gson.fromJson(reader, Cart.class);
         reader.close();
 
@@ -116,7 +142,6 @@ class JsonParserTest {
 
 
 
-    // TODO: 7/23/2021
     @Test
     @Tag("JsonParser")
     @Tag("Read_From_File")
@@ -156,7 +181,6 @@ class JsonParserTest {
 
     void testWithValueSource(String filePath) {
         newFile = new File(filePath);
-        // System.out.println(newFile.getAbsolutePath());
         Exception exception = assertThrows(NoSuchFileException.class, () ->
                 testParser.readFromFile(newFile));
 
@@ -178,7 +202,7 @@ class JsonParserTest {
         newFile.createNewFile();
         Cart newCart = testParser.readFromFile(newFile);
         Exception exception = assertThrows(NullPointerException.class, () ->
-                newCart.getCartName());
+                newCart.getCartName(), "Reading from empty file failed");
     }
 
 }
